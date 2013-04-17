@@ -1,0 +1,101 @@
+@(venueForm: Form[Venues])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
+
+@main(nav = "newvenue") {
+
+<div class="row">
+    <div class="span9">
+        @form(action = routes.Venue.submit, 'id -> "new-venue-form", 'class -> "form-horizontal") {
+
+        @if(flash.containsKey("error")){
+        <div class="alert alert-error">
+            @flash.get("error")
+        </div>
+        }
+
+        <fieldset>
+            <legend>About venue</legend>
+            @inputText(
+            venueForm("name"),
+            '_label -> "Venue name",
+            '_showConstraints -> false,
+            '_error -> venueForm.globalError,
+            'class -> "input-xlarge"
+            )
+            @textarea(
+            venueForm("about"),
+            '_label -> "Short description", 'cols -> 50,
+            '_showConstraints -> false,
+            '_error -> venueForm.globalError,
+            'class -> "input-xxlarge",
+            'rows -> "5"
+            )
+        </fieldset>
+        <fieldset>
+            <legend>Address</legend>
+            @inputText(
+            venueForm("address.line1"),
+            '_label -> "Address Line 1",
+            '_showConstraints -> false
+            )
+            @inputText(
+            venueForm("address.line2"),
+            '_label -> "Address Line 2"
+            )
+            @inputText(
+            venueForm("address.postCode"),
+            '_label -> "Post Code",
+            '_showConstraints -> false
+            )
+            @inputText(
+            venueForm("address.town"),
+            '_label -> "Town",
+            '_showConstraints -> false
+            )
+        </fieldset>
+
+        <fieldset>
+            <legend>Contact Details</legend>
+            @inputText(
+            venueForm("contact.contactName"),
+            '_label -> "Contact Name",
+            '_showConstraints -> false
+            )
+            @inputText(
+            venueForm("contact.email"),
+            '_label -> "Email",
+            '_showConstraints -> false
+            )
+            @inputText(
+            venueForm("contact.telephone"),
+            '_label -> "Telephone",
+            '_showConstraints -> false
+            )
+            @inputText(
+            venueForm("contact.website"),
+            '_label -> "Website",
+            '_showConstraints -> false
+            )
+        </fieldset>
+
+        <br />
+        <fieldset>
+            @checkbox(
+            venueForm("accept"),
+            '_label -> None, '_text -> "You agree the Terms and conditions",
+            '_showConstraints -> false
+            )
+        </fieldset>
+
+        <div class="form-actions">
+            <input type="submit" class="btn btn-primary" value="Create">
+            <a href="@routes.Application.index" class="btn">Cancel</a>
+        </div>
+
+        }
+    </div>
+</div>
+}
+
