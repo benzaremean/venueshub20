@@ -11,6 +11,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
+import com.google.code.morphia.query.UpdateResults;
 import controllers.MorphiaObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -22,6 +23,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import play.Logger;
+import play.data.Form;
 import play.data.validation.Constraints.Required;
 
 import javax.validation.Valid;
@@ -88,32 +90,23 @@ public class Venues {
         Float[] latlog = getLongLatGoogle(_address);
         venue.address.latitude = latlog[0];
         venue.address.longitude = latlog[1];
-        Key<Venues> save = MorphiaObject.datastore.save(venue);    }
+        Key<Venues> save = MorphiaObject.datastore.save(venue);
+    }
 
-    public static void delete(String idToDelete) {
-        Venues toDelete = MorphiaObject.datastore.find(Venues.class).field("_id").equal(new ObjectId(idToDelete)).get();
-        if (toDelete != null) {
-            Logger.info("toDelete: " + toDelete);
-            MorphiaObject.datastore.delete(toDelete);
-        } else {
-            Logger.debug("ID Not Found: " + idToDelete);
+    public static String delete(String idToDelete) {
+        try {
+            Logger.info("toDelete: " + idToDelete);
+            MorphiaObject.datastore.findAndDelete(MorphiaObject.datastore.createQuery(Venues.class).field("_id").equal(new ObjectId(idToDelete)));
+            return "success";
+        } catch (Exception e) {
+            Logger.debug("Venue with id not deleted: " + idToDelete);
+            return idToDelete.toString() + "not deleted please try again";
         }
     }
 
-    public static void deleteByName(String nameToDelete) {
-        Venues toDelete = MorphiaObject.datastore.find(Venues.class).field("name").equal(nameToDelete).get();
-        if (toDelete != null) {
-            Logger.info("toDelete: " + toDelete);
-            MorphiaObject.datastore.delete(toDelete);
-        } else {
-            Logger.debug("Name Not Found: " + nameToDelete);
-        }
-    } //deleteByName
-
     public static Venues getVenue(String id) {
-        Venues venue;
         try {
-            venue = MorphiaObject.datastore.find(Venues.class).field("_id").equal(new ObjectId(id)).get();
+            Venues venue = MorphiaObject.datastore.find(Venues.class).field("_id").equal(new ObjectId(id)).get();
             Logger.info("returning: " + venue);
             return venue;
         } catch (Exception e) {
@@ -177,5 +170,24 @@ public class Venues {
     }
 
 
+    public static Venues updateVenue(String id, Venues venue) {
+        try {
+            Query<Venues> query = MorphiaObject.datastore.createQuery(Venues.class).field("_id").equal(new ObjectId(id));
+            UpdateOperations<Venues> ops = MorphiaObject.datastore.createUpdateOperations(Venues.class)
+                    .set("name", venue.name)
+                    .set("about", venue.about)
+                    .set("address", venue.address)
+                    .set("contact", venue.contact);
+
+            UpdateResults<Venues> update = MorphiaObject.datastore.update(query, ops);
+
+            //Logger.info("returning: " + venue);
+            Venues updatedVenue = MorphiaObject.datastore.find(Venues.class).field("_id").equal(new ObjectId(id)).get();
+            return updatedVenue;
+        } catch (Exception e) {
+            Logger.debug("ID Not Found: " + id);
+        }
+        return null;
+    }
 }
 

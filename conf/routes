@@ -18,3 +18,10 @@ GET     /venues/new                 controllers.Venue.blank()
 
 # Return venue with id
 GET     /venues/:id                 controllers.Venue.details(id: String)
+
+# Update venue with id
+PUT     /venues/:id                 controllers.Venue.update(id: String)
+
+# delete venue with id
+DELETE     /venues/:id                 controllers.Venue.delete(id: String)
+
