@@ -22,11 +22,12 @@ public class Global extends GlobalSettings {
 //        } catch (UnknownHostException e) {
 //            e.printStackTrace();
 //        }
+        DB db = null;
         try {
             //MorphiaObject.mongo = new Mongo("127.0.0.1", 27017);
 
             MongoURI mongoURI = new MongoURI(System.getenv("MONGOHQ_URL"));
-            DB db = mongoURI.connectDB();
+            db = mongoURI.connectDB();
             db.authenticate(mongoURI.getUsername(), mongoURI.getPassword());
 
             MorphiaObject.mongo = db.getMongo();
@@ -38,7 +39,7 @@ public class Global extends GlobalSettings {
                 .map(Contact.class)
                         //.map(Rooms.class)
                 .map(Address.class);
-        MorphiaObject.datastore = MorphiaObject.morphia.createDatastore(MorphiaObject.mongo, "cassandra");
+        MorphiaObject.datastore = MorphiaObject.morphia.createDatastore(db.getMongo(), "cassandra");
         MorphiaObject.datastore.ensureIndexes();
         MorphiaObject.datastore.ensureCaps();
 
