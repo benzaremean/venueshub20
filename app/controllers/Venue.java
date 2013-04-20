@@ -80,7 +80,6 @@ public class Venue extends Controller {
         String deleted = Venues.delete(id);
         Logger.debug(deleted);
         if(deleted != "success")  {
-            //play.Logger.debug(deleted);
             return notFound(deleted);
         }
         return ok(deleted);
