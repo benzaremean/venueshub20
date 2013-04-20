@@ -1,5 +1,7 @@
 import com.google.code.morphia.Morphia;
+import com.mongodb.DB;
 import com.mongodb.Mongo;
+import com.mongodb.MongoURI;
 import controllers.MorphiaObject;
 import models.Address;
 import models.Contact;
@@ -7,6 +9,7 @@ import models.Venues;
 import play.GlobalSettings;
 import play.Logger;
 
+import java.net.URI;
 import java.net.UnknownHostException;
 
 public class Global extends GlobalSettings {
@@ -14,9 +17,20 @@ public class Global extends GlobalSettings {
     public void onStart(play.Application arg0) {
         super.beforeStart(arg0);
         Logger.debug("*** onStart ***");
+//        try {
+//            MorphiaObject.mongo = new Mongo("127.0.0.1", 27017);
+//        } catch (UnknownHostException e) {
+//            e.printStackTrace();
+//        }
         try {
-            MorphiaObject.mongo = new Mongo("127.0.0.1", 27017);
-        } catch (UnknownHostException e) {
+            //MorphiaObject.mongo = new Mongo("127.0.0.1", 27017);
+
+            MongoURI mongoURI = new MongoURI(System.getenv("MONGOHQ_URL"));
+            DB db = mongoURI.connectDB();
+            db.authenticate(mongoURI.getUsername(), mongoURI.getPassword());
+
+            MorphiaObject.mongo = db.getMongo();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         MorphiaObject.morphia = new Morphia();
