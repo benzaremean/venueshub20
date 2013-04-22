@@ -165,4 +165,10 @@ select, .checkbox, .sidebar .btn, .small[placeholder] {
     /*padding-bottom: 0;*/
 /*}*/
 
+/* NEW ISH */
+
+#new-venue-form .control-label {
+    text-align: left;
+}
+
 

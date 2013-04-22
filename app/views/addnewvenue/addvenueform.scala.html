@@ -38,21 +38,25 @@
             @inputText(
             venueForm("address.line1"),
             '_label -> "Address Line 1",
-            '_showConstraints -> false
+            '_showConstraints -> false,
+            'class -> "input-xlarge"
             )
             @inputText(
             venueForm("address.line2"),
-            '_label -> "Address Line 2"
+            '_label -> "Address Line 2",
+            'class -> "input-xlarge"
             )
             @inputText(
             venueForm("address.postCode"),
             '_label -> "Post Code",
-            '_showConstraints -> false
+            '_showConstraints -> false,
+            'class -> "input-xlarge"
             )
             @inputText(
             venueForm("address.town"),
             '_label -> "Town",
-            '_showConstraints -> false
+            '_showConstraints -> false,
+            'class -> "input-xlarge"
             )
         </fieldset>
 
@@ -61,22 +65,26 @@
             @inputText(
             venueForm("contact.contactName"),
             '_label -> "Contact Name",
-            '_showConstraints -> false
+            '_showConstraints -> false,
+            'class -> "input-xlarge"
             )
             @inputText(
             venueForm("contact.email"),
             '_label -> "Email",
-            '_showConstraints -> false
+            '_showConstraints -> false,
+            'class -> "input-xlarge"
             )
             @inputText(
             venueForm("contact.telephone"),
             '_label -> "Telephone",
-            '_showConstraints -> false
+            '_showConstraints -> false,
+            'class -> "input-xlarge"
             )
             @inputText(
             venueForm("contact.website"),
             '_label -> "Website",
-            '_showConstraints -> false
+            '_showConstraints -> false,
+            'class -> "input-xlarge"
             )
         </fieldset>
 
@@ -88,6 +96,15 @@
             '_showConstraints -> false
             )
         </fieldset>
+
+        @**<div class="fileupload fileupload-new" data-provides="fileupload">
+            <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;"><img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&text=no+image" /></div>
+            <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
+            <div>
+                <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" /></span>
+                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+            </div>
+        </div>**@
 
         <div class="form-actions">
             <input type="submit" class="btn btn-primary" value="Create">

@@ -23,7 +23,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import play.Logger;
-import play.data.Form;
 import play.data.validation.Constraints.Required;
 
 import javax.validation.Valid;
