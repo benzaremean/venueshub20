@@ -17,17 +17,11 @@ public class Global extends GlobalSettings {
     public void onStart(play.Application arg0) {
         super.beforeStart(arg0);
         Logger.debug("*** onStart ***");
-//        try {
-//            MorphiaObject.mongo = new Mongo("127.0.0.1", 27017);
-//        } catch (UnknownHostException e) {
-//            e.printStackTrace();
-//        }
-        DB db = null;
+        MongoURI mongoURI = null;
+        String mongoHQ = System.getenv("MONGOHQ_URL") != null ? System.getenv("MONGOHQ_URL") : "mongodb://heroku:1344381aed1125994599b7fa3459c935@alex.mongohq.com:10070/app15112723";
         try {
-            //MorphiaObject.mongo = new Mongo("127.0.0.1", 27017);
-
-            MongoURI mongoURI = new MongoURI(System.getenv("MONGOHQ_URL"));
-            db = mongoURI.connectDB();
+            mongoURI = new MongoURI(mongoHQ);
+            DB db = mongoURI.connectDB();
             db.authenticate(mongoURI.getUsername(), mongoURI.getPassword());
 
             MorphiaObject.mongo = db.getMongo();
@@ -39,7 +33,7 @@ public class Global extends GlobalSettings {
                 .map(Contact.class)
                         //.map(Rooms.class)
                 .map(Address.class);
-        MorphiaObject.datastore = MorphiaObject.morphia.createDatastore(db.getMongo(), "cassandra");
+        MorphiaObject.datastore = MorphiaObject.morphia.createDatastore(MorphiaObject.mongo, "app15112723", mongoURI.getUsername(), mongoURI.getPassword());
         MorphiaObject.datastore.ensureIndexes();
         MorphiaObject.datastore.ensureCaps();
 
