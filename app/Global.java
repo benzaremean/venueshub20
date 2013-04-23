@@ -1,6 +1,5 @@
 import com.google.code.morphia.Morphia;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
 import com.mongodb.MongoURI;
 import controllers.MorphiaObject;
 import models.Address;
@@ -8,9 +7,6 @@ import models.Contact;
 import models.Venues;
 import play.GlobalSettings;
 import play.Logger;
-
-import java.net.URI;
-import java.net.UnknownHostException;
 
 public class Global extends GlobalSettings {
     @Override

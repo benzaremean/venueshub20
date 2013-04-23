@@ -1,5 +1,6 @@
 package controllers;
 
+import models.S3File;
 import models.Venues;
 import models.VenuesSearchResults;
 import org.codehaus.jackson.JsonNode;
@@ -7,10 +8,14 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import views.html.addnewvenue.addvenueform;
 import views.html.addnewvenue.summary;
 import play.Logger;
+
+import java.io.File;
+
 import static play.libs.Json.fromJson;
 import static play.libs.Json.toJson;
 
@@ -50,6 +55,7 @@ public class Venue extends Controller {
         } else {
             Venues.create(filledForm.get());
             Venues created = filledForm.get();
+            upload(created.id);
             return ok(summary.render(created));
         }
     }
@@ -83,6 +89,24 @@ public class Venue extends Controller {
             return notFound(deleted);
         }
         return ok(deleted);
+    }
+
+    public static void upload(String venueId) {
+        Http.MultipartFormData body = request().body().asMultipartFormData();
+        Http.MultipartFormData.FilePart picture = body.getFile("picture");
+        if (picture != null) {
+            //String fileName = picture.getFilename();
+            //String contentType = picture.getContentType();
+            //File file =
+            S3File s3File = new S3File();
+            s3File.name = picture.getFilename();
+            s3File.file = picture.getFile();
+            s3File.id = venueId;
+            s3File.save();
+            Logger.debug("yes we got it");
+        } else {
+            Logger.debug("awwwwwwww");
+        }
     }
 
 

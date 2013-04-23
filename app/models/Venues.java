@@ -29,6 +29,7 @@ import javax.validation.Valid;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -50,6 +51,8 @@ public class Venues {
     @Required
     @Embedded
     public Contact contact;
+
+    public List<String> photos;
 
     //@Required
     //@Embedded
@@ -89,6 +92,10 @@ public class Venues {
         Float[] latlog = getLongLatGoogle(_address);
         venue.address.latitude = latlog[0];
         venue.address.longitude = latlog[1];
+        venue.photos = new ArrayList<String>();
+        venue.photos.add("sound.jpg");
+        venue.photos.add("bound.jpg");
+        venue.photos.add("feeling.jpg");
         Key<Venues> save = MorphiaObject.datastore.save(venue);
     }
 
