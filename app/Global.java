@@ -4,6 +4,7 @@ import com.mongodb.MongoURI;
 import controllers.MorphiaObject;
 import models.Address;
 import models.Contact;
+import models.Images;
 import models.Venues;
 import play.GlobalSettings;
 import play.Logger;
@@ -27,8 +28,9 @@ public class Global extends GlobalSettings {
         MorphiaObject.morphia = new Morphia();
         MorphiaObject.morphia.map(Venues.class)
                 .map(Contact.class)
-                        //.map(Rooms.class)
-                .map(Address.class);
+                //.map(Rooms.class)
+                .map(Address.class)
+                .map(Images.class);
         MorphiaObject.datastore = MorphiaObject.morphia.createDatastore(MorphiaObject.mongo, "app15112723", mongoURI.getUsername(), mongoURI.getPassword());
         MorphiaObject.datastore.ensureIndexes();
         MorphiaObject.datastore.ensureCaps();

@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Images;
 import models.S3File;
 import models.Venues;
 import models.VenuesSearchResults;
@@ -15,6 +16,7 @@ import views.html.addnewvenue.summary;
 import play.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import static play.libs.Json.fromJson;
 import static play.libs.Json.toJson;
@@ -55,7 +57,15 @@ public class Venue extends Controller {
         } else {
             Venues.create(filledForm.get());
             Venues created = filledForm.get();
-            upload(created.id);
+
+            String upload = upload(created.id);
+            Images image = new Images();
+            image.id = created.id;
+            image.photos = new ArrayList();
+            image.photos.add(upload);
+            image.primary = upload;
+            Images.create(image);
+
             return ok(summary.render(created));
         }
     }
@@ -91,21 +101,21 @@ public class Venue extends Controller {
         return ok(deleted);
     }
 
-    public static void upload(String venueId) {
+    public static String upload(String venueId) {
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart picture = body.getFile("picture");
         if (picture != null) {
-            //String fileName = picture.getFilename();
-            //String contentType = picture.getContentType();
-            //File file =
             S3File s3File = new S3File();
-            s3File.name = picture.getFilename();
+            String pictureFileName = picture.getFilename();
+            s3File.name = pictureFileName;
             s3File.file = picture.getFile();
             s3File.id = venueId;
             s3File.save();
             Logger.debug("yes we got it");
+            return String.format("%s/%s", venueId, pictureFileName);
         } else {
             Logger.debug("awwwwwwww");
+            return null;
         }
     }
 
