@@ -15,7 +15,7 @@ public class Global extends GlobalSettings {
         super.beforeStart(arg0);
         Logger.debug("*** onStart ***");
         MongoURI mongoURI = null;
-        String mongoHQ = System.getenv("MONGOHQ_URL") != null ? System.getenv("MONGOHQ_URL") : "mongodb://heroku:1344381aed1125994599b7fa3459c935@alex.mongohq.com:10070/app15112723";
+        String mongoHQ = System.getenv("MONGOHQ_URL") != null ? System.getenv("MONGOHQ_URL") : "mongodb://heroku:d9e634c2734105515fdc60aed77a98ad@alex.mongohq.com:10008/app15209235";
         try {
             mongoURI = new MongoURI(mongoHQ);
             DB db = mongoURI.connectDB();
@@ -31,7 +31,7 @@ public class Global extends GlobalSettings {
                 //.map(Rooms.class)
                 .map(Address.class)
                 .map(Images.class);
-        MorphiaObject.datastore = MorphiaObject.morphia.createDatastore(MorphiaObject.mongo, "app15112723", mongoURI.getUsername(), mongoURI.getPassword());
+        MorphiaObject.datastore = MorphiaObject.morphia.createDatastore(MorphiaObject.mongo, "app15209235", mongoURI.getUsername(), mongoURI.getPassword());
         MorphiaObject.datastore.ensureIndexes();
         MorphiaObject.datastore.ensureCaps();
 
