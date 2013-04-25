@@ -17,6 +17,7 @@ import play.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import static play.libs.Json.fromJson;
 import static play.libs.Json.toJson;
@@ -36,9 +37,17 @@ public class Venue extends Controller {
     }
 
     public static Result listVenues() {
-
+        Logger.debug(request().getQueryString("a"));
+        Logger.debug(request().getQueryString("b"));
+        Logger.debug(request().getQueryString("c"));
         VenuesSearchResults results = Venues.all();
-        return ok(toJson(results.venuesList));
+        if (request().accepts("text/html")) {
+            return TODO;
+        } else if (request().accepts("application/json")) {
+            return ok(Json.toJson(results.venuesList));
+        } else {
+            return badRequest();
+        }
     }
 
     /**
@@ -58,12 +67,14 @@ public class Venue extends Controller {
             Venues.create(filledForm.get());
             Venues created = filledForm.get();
 
-            String upload = upload(created.id);
+            List<String> upload = upload(created.id);
             Images image = new Images();
             image.id = created.id;
             image.photos = new ArrayList();
-            image.photos.add(upload);
-            image.primary = upload;
+            for(String copy : upload) {
+                image.photos.add(copy);
+            }
+            image.primary = upload.get(1);
             Images.create(image);
 
             return ok(summary.render(created));
@@ -72,9 +83,15 @@ public class Venue extends Controller {
 
     public static Result details(String id) {
         Venues venue = Venues.getVenue(id);
-        if(venue != null)
-            return ok(toJson(venue));
-        else {
+        if(venue != null) {
+            if (request().accepts("text/html")) {
+                return TODO;
+            } else if (request().accepts("application/json")) {
+                return ok(toJson(venue));
+            } else {
+                return badRequest();
+            }
+        }  else {
             return notFound(Json.newObject());
         }
     }
@@ -101,24 +118,45 @@ public class Venue extends Controller {
         return ok(deleted);
     }
 
-    public static String upload(String venueId) {
+//    public static String upload(String venueId) {
+//        Http.MultipartFormData body = request().body().asMultipartFormData();
+//        Http.MultipartFormData.FilePart picture = body.getFile("picture");
+//        if (picture != null) {
+//            S3File s3File = new S3File();
+//            String pictureFileName = picture.getFilename();
+//            s3File.name = pictureFileName;
+//            s3File.file = picture.getFile();
+//            s3File.id = venueId;
+//            s3File.save();
+//            Logger.debug("yes we got it");
+//            return String.format("%s/%s", venueId, pictureFileName);
+//        } else {
+//            Logger.debug("awwwwwwww");
+//            return null;
+//        }
+//    }
+
+    public static List<String> upload(String venueId) {
         Http.MultipartFormData body = request().body().asMultipartFormData();
-        Http.MultipartFormData.FilePart picture = body.getFile("picture");
-        if (picture != null) {
-            S3File s3File = new S3File();
-            String pictureFileName = picture.getFilename();
-            s3File.name = pictureFileName;
-            s3File.file = picture.getFile();
-            s3File.id = venueId;
-            s3File.save();
-            Logger.debug("yes we got it");
-            return String.format("%s/%s", venueId, pictureFileName);
+        List<Http.MultipartFormData.FilePart> pictures = body.getFiles();
+        if (pictures.size() > 0) {
+            List<String> uploadedImages = new ArrayList<String>();
+            for(Http.MultipartFormData.FilePart picture : pictures) {
+                S3File s3File = new S3File();
+                String pictureFileName = picture.getFilename();
+                s3File.name = pictureFileName;
+                s3File.file = picture.getFile();
+                s3File.id = venueId;
+                s3File.save();
+                uploadedImages.add(String.format("%s/%s", venueId, pictureFileName));
+                Logger.debug(String.format("Uploaded %s pictures", Integer.toString(pictures.size())));
+            }
+            return uploadedImages;
+
         } else {
-            Logger.debug("awwwwwwww");
             return null;
         }
     }
-
 
 
 
