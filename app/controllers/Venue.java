@@ -1,9 +1,6 @@
 package controllers;
 
-import models.Images;
-import models.S3File;
-import models.Venues;
-import models.VenuesSearchResults;
+import models.*;
 import org.codehaus.jackson.JsonNode;
 import play.data.Form;
 import play.libs.Json;
@@ -66,6 +63,10 @@ public class Venue extends Controller {
         } else {
             Venues.create(filledForm.get());
             Venues created = filledForm.get();
+            //List<Rooms> rooms = new ArrayList<Rooms>();
+            for(Rooms room : created.rooms) {
+                Logger.debug(room.description);
+            }
 
             List<String> upload = upload(created.id);
             Images image = new Images();

@@ -10,6 +10,9 @@ public class Rooms {
     public String name;
     public String description;
     @Required
-    public String capacity;
+    public int maxCapacityTheatre;
+    @Required
+    public int maxCapacityBanquet;
+    public String dimensions;
 
 }

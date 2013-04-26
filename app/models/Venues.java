@@ -25,6 +25,8 @@ import org.json.simple.JSONValue;
 import play.Logger;
 import play.data.validation.Constraints.Required;
 
+import javax.persistence.CascadeType;
+import javax.persistence.ManyToMany;
 import javax.validation.Valid;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -52,9 +54,10 @@ public class Venues {
     @Embedded
     public Contact contact;
 
-    //@Required
-    //@Embedded
-    //private List<Rooms> rooms;
+    @Required
+    @Embedded
+    @ManyToMany(cascade = CascadeType.ALL)
+    public List<Rooms> rooms;
     //@Required
     //private List<HireType> hireType;
     //public String parkingInfo;

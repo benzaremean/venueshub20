@@ -39,7 +39,8 @@
             venueForm("address.line1"),
             '_label -> "Address Line 1",
             '_showConstraints -> false,
-            'class -> "input-xlarge"
+            'class -> "input-xlarge",
+            'placeholder -> "12 Somplace Street"
             )
             @inputText(
             venueForm("address.line2"),
@@ -50,14 +51,53 @@
             venueForm("address.postCode"),
             '_label -> "Post Code",
             '_showConstraints -> false,
-            'class -> "input-xlarge"
+            'class -> "input-xlarge",
+            'placeholder -> "AA1 2BC"
             )
             @inputText(
             venueForm("address.town"),
             '_label -> "Town",
             '_showConstraints -> false,
-            'class -> "input-xlarge"
+            'class -> "input-xlarge",
+            'placeholder -> "London"
             )
+        </fieldset>
+
+        <fieldset>
+            <legend>Rooms</legend>
+            @inputText(
+                venueForm("rooms[0].name"),
+                '_label -> "Room",
+                '_showConstraints -> false,
+                'class -> "input-xlarge"
+            )
+            @textarea(
+                venueForm("rooms[0].description"),
+                '_label -> "Short description", 'cols -> 50,
+                'class -> "input-xxlarge",
+                'rows -> "5"
+            )
+            @inputText(
+                venueForm("rooms[0].maxCapacityTheatre"),
+                '_label -> "Max Capacity Threatre",
+                '_showConstraints -> false,
+                'class -> "input-mini",
+                'placeholder -> "e.g. 300"
+            )
+            @inputText(
+                venueForm("rooms[0].maxCapacityBanquet"),
+                '_label -> "Max Capacity Banquet",
+                '_showConstraints -> false,
+                'class -> "input-mini"
+            )
+            @inputText(
+                venueForm("rooms[0].dimensions"),
+                '_label -> "Dimensions",
+                '_showConstraints -> false,
+                'class -> "input-mini",
+                'placeholder -> "12m x 9m"
+            )
+            <a class="btn btn-small" href="#"><i class="icon-plus"></i> Add Another Room</a>
         </fieldset>
 
         <fieldset>
@@ -91,7 +131,8 @@
         <fieldset>
             <legend>Add Photos</legend>
             <div>
-                <input type="file" name="picture" multiple>
+                <input id="file" type="file" name="picture" multiple>
+                <output id="list"></output>
             </div>
         </fieldset>
 
